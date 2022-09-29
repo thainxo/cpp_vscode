@@ -1,2 +1,2 @@
 #!/bin/bash
-cat input.txt | build/solution
+/usr/bin/gdb

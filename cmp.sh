@@ -1,46 +1,18 @@
-#!/bin/sh
+reset
 
-data()
-{
-    echo "1";
-    n=50000
-    echo $n;
-    i=0;
-    while [ "$i" -lt $n ];
-    do
-        echo 10;
-    done
-}
+g++ gen_input.cpp  -o build/cmp_gen 
+g++ base.cpp  -o build/cmp1
+g++ code.cpp  -o build/cmp2
 
-gettime() {
-    t1=$(date +%s%N)
-    data | ./a.out 
-    t2=$(date +%s%N)
-    tt=$(($t2 - $t1))
-    echo time: "$tt"
-}
-
-build() {
-    g++  -o gen gen.cpp
-    g++  -o co co.cpp
-    g++  -o c c.cpp
-}
-cmp() {
-    ./gen
-    a=$(cat auto.txt | ./co)
-    b=$(cat auto.txt | ./c)
-    echo "$([ "$a" = "$b" ] && echo 1 || echo 0)"
-}
-reset 
-# build
-# r=1
-# while [ "$r" = "1" ];
-# do
-#     r=$(cmp)
-# done
-
-g++ co.cpp;
-gettime
-g++ c.cpp;
-gettime
-
+while [ "1" = "1" ];
+do
+    fn="input_cmp.txt"
+    filename="./build/$fn"
+    ./build/cmp_gen > $filename
+    a=$(cat $filename | ./build/cmp1)
+    b=$(cat $filename | ./build/cmp2)
+    if [ ! "$a" = "$b" ]; then 
+        cp $filename ${fn}_fail
+        exit 0
+    fi
+done
